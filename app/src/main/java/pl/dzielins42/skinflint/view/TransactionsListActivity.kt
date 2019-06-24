@@ -34,6 +34,7 @@ class TransactionsListActivity : AppCompatActivity() {
             )
             adapter.submitList(newList)
             list = newList
+            startActivity(EditTransactionActivity.getIntent(this))
         }
 
         recyclerView.adapter = adapter

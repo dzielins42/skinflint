@@ -2,4 +2,14 @@
     <string name="app_name">Skinflint</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_transactions_list">TransactionsListActivity</string>
+
+    <string name="transaction_name">Name</string>
+    <string name="transaction_desc">Description</string>
+    <string name="transaction_value">Value</string>
+    <string name="transaction_currency">Currency</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_time">Time</string>
+
+    <string name="done">Done</string>
+    <string name="cancel">@android:string/cancel</string>
 </resources>
