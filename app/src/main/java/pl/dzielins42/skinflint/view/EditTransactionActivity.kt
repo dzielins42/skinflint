@@ -11,7 +11,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_transaction.*
-import org.apache.commons.lang3.RandomStringUtils
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.data.entity.Transaction
 import java.util.*
@@ -42,9 +41,14 @@ class EditTransactionActivity : AppCompatActivity() {
 
         editedTransaction = intent.getParcelableExtra(EXTRA_EDITED_TRANSACTION)
 
-        if (editedTransaction != null) {
-            calendar.time = editedTransaction!!.date
+        editedTransaction?.let {
+            calendar.time = it.date
+            name.setText(it.name)
+            value.setText(it.value.toString())
+            description.setText(it.description)
         }
+
+        title = editedTransaction?.name ?: getString(R.string.transaction_new)
 
         setDateField(calendar)
         setTimeField(calendar)
@@ -68,12 +72,12 @@ class EditTransactionActivity : AppCompatActivity() {
 
     private fun composeTransaction(): Transaction {
         return Transaction(
-            0,
-            RandomStringUtils.randomAlphabetic(8),
+            editedTransaction?.id ?: 0,
+            name.text.toString(),
             "$",
-            null,
-            Date(),
-            4200
+            description.text.toString(),
+            calendar.time,
+            value.text.toString().toLong()
         )
     }
 

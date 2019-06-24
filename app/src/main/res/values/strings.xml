@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_transactions_list">TransactionsListActivity</string>
 
+    <string name="transaction_new">New transaction</string>
     <string name="transaction_name">Name</string>
     <string name="transaction_desc">Description</string>
     <string name="transaction_value">Value</string>

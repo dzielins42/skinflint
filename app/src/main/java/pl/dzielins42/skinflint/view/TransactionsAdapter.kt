@@ -1,5 +1,6 @@
 package pl.dzielins42.skinflint.view
 
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,12 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_transaction.*
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.data.entity.Transaction
+import java.text.NumberFormat
+import java.util.*
 
-class TransactionsAdapter : ListAdapter<Transaction, TransactionViewHolder>(TransactionsDiffCallback()) {
+class TransactionsAdapter(
+    private val itemClickListener: ItemClickListener? = null
+) : ListAdapter<Transaction, TransactionViewHolder>(TransactionsDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): TransactionViewHolder {
@@ -23,7 +28,9 @@ class TransactionsAdapter : ListAdapter<Transaction, TransactionViewHolder>(Tran
     override fun onBindViewHolder(
         holder: TransactionViewHolder, position: Int
     ) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item)
+        holder.itemView.setOnClickListener { itemClickListener?.onItemClick(item) }
     }
 }
 
@@ -34,7 +41,12 @@ class TransactionViewHolder(
         get() = itemView
 
     fun bind(item: Transaction) {
-        text.text = item.name
+        mainText.text = item.name
+        secondaryText.text =
+            NumberFormat.getCurrencyInstance().apply {
+                currency = Currency.getInstance("PLN")
+            }.format(item.value / 100.0)
+        metaText.text = DateFormat.getDateFormat(itemView.context).format(item.date)
     }
 }
 
@@ -50,5 +62,8 @@ class TransactionsDiffCallback : DiffUtil.ItemCallback<Transaction>() {
     ): Boolean {
         return oldItem == newItem
     }
+}
 
+interface ItemClickListener {
+    fun onItemClick(item: Transaction)
 }
