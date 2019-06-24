@@ -2,41 +2,46 @@ package pl.dzielins42.skinflint.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import pl.dzielins42.skinflint.R
-
+import androidx.lifecycle.Observer
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_transactions_list.*
-import org.apache.commons.lang3.RandomStringUtils
-import pl.dzielins42.skinflint.data.entity.Transaction
-import java.util.*
+import pl.dzielins42.skinflint.R
+import javax.inject.Inject
 
 class TransactionsListActivity : AppCompatActivity() {
 
-    private val adapter = TransactionsAdapter()
+    @Inject
+    lateinit var viewModel: TransactionsListViewModel
 
-    private var list = emptyList<Transaction>()
+    private val adapter = TransactionsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_transactions_list)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            val newList = list.toMutableList()
-            newList.add(
+            startActivity(EditTransactionActivity.getIntent(this))
+            /*viewModel.saveTransaction(
                 Transaction(
-                    list.size.toLong(),
+                    0,
                     RandomStringUtils.randomAlphabetic(8),
                     "$",
                     null,
                     Date(),
                     4200
                 )
-            )
-            adapter.submitList(newList)
-            list = newList
-            startActivity(EditTransactionActivity.getIntent(this))
+            )*/
         }
 
         recyclerView.adapter = adapter
+
+        viewModel.viewState.observe(
+            this,
+            Observer<TransactionsListViewState> { viewState ->
+                adapter.submitList(viewState.transactions)
+            }
+        )
     }
 }

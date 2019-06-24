@@ -9,12 +9,18 @@ import android.text.format.DateFormat
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_transaction.*
+import org.apache.commons.lang3.RandomStringUtils
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.data.entity.Transaction
 import java.util.*
+import javax.inject.Inject
 
 class EditTransactionActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var viewModel: EditTransactionViewModel
 
     private var editedTransaction: Transaction? = null
 
@@ -22,6 +28,7 @@ class EditTransactionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_edit_transaction)
         setSupportActionBar(toolbar)
 
@@ -49,13 +56,25 @@ class EditTransactionActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.menu_done -> true
+            R.id.menu_done -> {
+                viewModel.saveTransaction(composeTransaction())
+                finish()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun composeTransaction(): Transaction {
+        return Transaction(
+            0,
+            RandomStringUtils.randomAlphabetic(8),
+            "$",
+            null,
+            Date(),
+            4200
+        )
     }
 
     private fun showDatePicker() {
