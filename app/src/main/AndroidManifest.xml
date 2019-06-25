@@ -11,10 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.EditTransactionActivity"
+            android:name=".view.transactions.details.EditTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".view.TransactionsListActivity"
+            android:name=".view.transactions.list.TransactionsListActivity"
             android:label="@string/title_activity_transactions_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

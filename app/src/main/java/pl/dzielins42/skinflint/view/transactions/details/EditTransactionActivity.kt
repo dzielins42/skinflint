@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.view
+package pl.dzielins42.skinflint.view.transactions.details
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -124,7 +124,7 @@ class EditTransactionActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_EDITED_TRANSACTION =
-            "pl.dzielins42.skinflint.view.EditTransactionActivity.EDITED_TRANSACTION"
+            "pl.dzielins42.skinflint.view.transactions.details.EditTransactionActivity.EDITED_TRANSACTION"
 
         fun getIntent(context: Context, editedTransaction: Transaction? = null): Intent {
             return Intent(context, EditTransactionActivity::class.java)

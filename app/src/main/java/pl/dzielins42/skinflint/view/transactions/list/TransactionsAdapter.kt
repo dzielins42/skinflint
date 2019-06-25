@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.view
+package pl.dzielins42.skinflint.view.transactions.list
 
 import android.text.format.DateFormat
 import android.view.LayoutInflater

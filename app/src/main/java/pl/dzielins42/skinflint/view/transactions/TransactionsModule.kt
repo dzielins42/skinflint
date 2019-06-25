@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.view
+package pl.dzielins42.skinflint.view.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,14 +9,18 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import pl.dzielins42.skinflint.business.TransactionInteractor
 import pl.dzielins42.skinflint.dagger.ViewModelKey
+import pl.dzielins42.skinflint.view.transactions.details.EditTransactionActivity
+import pl.dzielins42.skinflint.view.transactions.details.EditTransactionViewModel
+import pl.dzielins42.skinflint.view.transactions.list.TransactionsListActivity
+import pl.dzielins42.skinflint.view.transactions.list.TransactionsListViewModel
 
 @Module(
     includes = [
-        TransactionsListModule.BindView::class,
-        TransactionsListModule.ProvideViewModel::class
+        TransactionsModule.BindView::class,
+        TransactionsModule.ProvideViewModel::class
     ]
 )
-abstract class TransactionsListModule {
+abstract class TransactionsModule {
 
     @Module(
         includes = [

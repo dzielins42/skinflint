@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.view
+package pl.dzielins42.skinflint.view.transactions.details
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers

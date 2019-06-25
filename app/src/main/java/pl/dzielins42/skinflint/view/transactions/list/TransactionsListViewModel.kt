@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.view
+package pl.dzielins42.skinflint.view.transactions.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,7 +22,11 @@ class TransactionsListViewModel(
             transactionInteractor.getAll()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { transactions ->
-                    mutableViewState.postValue(TransactionsListViewState((transactions)))
+                    mutableViewState.postValue(
+                        TransactionsListViewState(
+                            (transactions)
+                        )
+                    )
                 }
         )
     }

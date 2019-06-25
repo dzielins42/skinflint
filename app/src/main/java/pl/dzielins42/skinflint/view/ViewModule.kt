@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Module
 import dagger.Provides
+import pl.dzielins42.skinflint.view.transactions.TransactionsModule
 import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module(
     includes = [
-        TransactionsListModule::class
+        TransactionsModule::class
     ]
 )
 class ViewModule {
