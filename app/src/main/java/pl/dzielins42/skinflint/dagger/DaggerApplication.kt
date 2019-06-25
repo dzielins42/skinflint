@@ -11,6 +11,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import pl.dzielins42.skinflint.business.BusinessModule
 import pl.dzielins42.skinflint.data.DataModule
 import pl.dzielins42.skinflint.view.ViewModule
 import javax.inject.Inject
@@ -44,6 +45,7 @@ class DaggerApp : MultiDexApplication(), HasActivityInjector {
         AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         DataModule::class,
+        BusinessModule::class,
         ViewModule::class
     ]
 )

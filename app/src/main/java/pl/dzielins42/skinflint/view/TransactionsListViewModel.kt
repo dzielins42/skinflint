@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import pl.dzielins42.skinflint.data.entity.Transaction
-import pl.dzielins42.skinflint.data.repository.TransactionRepository
+import pl.dzielins42.skinflint.business.TransactionInteractor
 
 class TransactionsListViewModel(
-    private val transactionRepository: TransactionRepository
+    private val transactionInteractor: TransactionInteractor
 ) : ViewModel() {
 
     val viewState: LiveData<TransactionsListViewState>
@@ -21,21 +19,11 @@ class TransactionsListViewModel(
 
     init {
         compositeDisposable.add(
-            transactionRepository.getAll()
-                .subscribeOn(Schedulers.io())
+            transactionInteractor.getAll()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { transactions ->
                     mutableViewState.postValue(TransactionsListViewState((transactions)))
                 }
-        )
-    }
-
-    fun saveTransaction(transaction: Transaction) {
-        compositeDisposable.add(
-            transactionRepository.insert(transaction)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
         )
     }
 

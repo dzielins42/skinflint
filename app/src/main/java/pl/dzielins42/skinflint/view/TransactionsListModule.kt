@@ -7,8 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import pl.dzielins42.skinflint.business.TransactionInteractor
 import pl.dzielins42.skinflint.dagger.ViewModelKey
-import pl.dzielins42.skinflint.data.repository.TransactionRepository
 
 @Module(
     includes = [
@@ -67,14 +67,14 @@ abstract class TransactionsListModule {
         @IntoMap
         @ViewModelKey(TransactionsListViewModel::class)
         fun provideTransactionsListViewModel(
-            transactionRepository: TransactionRepository
-        ): ViewModel = TransactionsListViewModel(transactionRepository)
+            transactionInteractor: TransactionInteractor
+        ): ViewModel = TransactionsListViewModel(transactionInteractor)
 
         @Provides
         @IntoMap
         @ViewModelKey(EditTransactionViewModel::class)
         fun provideEditTransactionViewModel(
-            transactionRepository: TransactionRepository
-        ): ViewModel = EditTransactionViewModel(transactionRepository)
+            transactionInteractor: TransactionInteractor
+        ): ViewModel = EditTransactionViewModel(transactionInteractor)
     }
 }
