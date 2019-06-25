@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/transaction_name"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -52,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/transaction_value"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/currencyInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nameInputLayout"
@@ -72,6 +74,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_small"
             android:hint="@string/transaction_value"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/valueInputLayout"
             app:layout_constraintTop_toBottomOf="@id/nameInputLayout">
@@ -90,6 +93,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/transaction_date"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/timeInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/valueInputLayout"
@@ -110,6 +114,7 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_small"
             android:hint="@string/transaction_time"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/dateInputLayout"
             app:layout_constraintTop_toBottomOf="@id/valueInputLayout">
@@ -127,6 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/transaction_desc"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dateInputLayout">

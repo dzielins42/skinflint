@@ -13,4 +13,7 @@
 
     <string name="done">Done</string>
     <string name="cancel">@android:string/cancel</string>
+
+    <string name="form_error_empty">Field cannot be empty</string>
+    <string name="form_error_invalid_value">Value is invalid</string>
 </resources>

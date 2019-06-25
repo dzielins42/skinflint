@@ -43,6 +43,6 @@ class TransactionsListActivity : AppCompatActivity() {
     }
 
     private fun startEditTransactionActivity(transaction: Transaction? = null) {
-        startActivity(EditTransactionActivity.getIntent(this, transaction))
+        startActivity(EditTransactionActivity.getIntent(this, transaction?.id))
     }
 }
