@@ -15,9 +15,8 @@ import kotlinx.android.synthetic.main.activity_edit_transaction.*
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.business.InputFormField
 import pl.dzielins42.skinflint.business.TransactionInputForm
-import pl.dzielins42.skinflint.data.entity.Transaction
-import pl.dzielins42.skinflint.ext.getDoubleInput
-import pl.dzielins42.skinflint.ext.getInput
+import pl.dzielins42.skinflint.util.ext.getDoubleInput
+import pl.dzielins42.skinflint.util.ext.getInput
 import java.util.*
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package pl.dzielins42.skinflint.ext
+package pl.dzielins42.skinflint.util.ext
 
 import android.widget.EditText
 import pl.dzielins42.skinflint.business.InputFormField
