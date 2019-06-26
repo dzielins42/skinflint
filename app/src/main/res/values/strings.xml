@@ -11,7 +11,12 @@
     <string name="transaction_date">Date</string>
     <string name="transaction_time">Time</string>
 
+    <string name="confirm_transaction_delete_title">Delete transaction</string>
+    <string name="confirm_transaction_delete_msg">Transaction will be removed</string>
+
     <string name="done">Done</string>
+    <string name="ok">@android:string/ok</string>
+    <string name="delete">Delete</string>
     <string name="cancel">@android:string/cancel</string>
 
     <string name="form_error_empty">Field cannot be empty</string>

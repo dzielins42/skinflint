@@ -19,4 +19,6 @@ interface TransactionRepository {
     fun delete(transaction: Transaction): Completable
 
     fun delete(vararg transactions: Transaction): Completable
+
+    fun delete(id: Long): Completable
 }

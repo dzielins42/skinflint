@@ -7,7 +7,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import pl.dzielins42.skinflint.business.TransactionInputForm
 import pl.dzielins42.skinflint.business.TransactionInteractor
-import pl.dzielins42.skinflint.data.entity.Transaction
 
 class EditTransactionViewModel(
     private val transactionInteractor: TransactionInteractor
@@ -20,6 +19,21 @@ class EditTransactionViewModel(
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
+    }
+
+    fun deleteTransaction(id: Long) {
+        compositeDisposable.add(
+            transactionInteractor.delete(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    // TODO scan?
+                    mutableViewState.postValue(
+                        EditTransactionViewState(
+                            mutableViewState.value!!.form, true
+                        )
+                    )
+                }
+        )
     }
 
     fun setEditedTransaction(id: Long) {

@@ -75,6 +75,27 @@ class TransactionDaoTest : AbstractRoomDatabaseTest() {
             }
     }
 
+    @Test
+    fun insertDeleteByIdAndGet() {
+        val testSubscriber = database.transactionDao().getAll().test()
+
+        database.transactionDao().insert(TRANSACTION).blockingGet()
+        database.transactionDao().delete(TRANSACTION.id).blockingAwait()
+
+        testSubscriber.assertNoErrors()
+            .assertNotComplete()
+            .assertValueCount(3)
+            .assertValueAt(0) { value ->
+                value.isEmpty()
+            }
+            .assertValueAt(1) { value ->
+                value.isNotEmpty() && value.size == 1 && value[0] == TRANSACTION
+            }
+            .assertValueAt(2) { value ->
+                value.isEmpty()
+            }
+    }
+
     companion object {
         private val TRANSACTION = Transaction(
             123,

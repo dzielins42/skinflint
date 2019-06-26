@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import dagger.android.AndroidInjection
@@ -55,6 +56,9 @@ class EditTransactionActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_transaction_edit, menu)
+
+        menu.findItem(R.id.menu_delete).isVisible = editedTransactionId > 0
+
         return true
     }
 
@@ -63,6 +67,10 @@ class EditTransactionActivity : AppCompatActivity() {
             R.id.menu_done -> {
                 viewModel.saveTransaction(composeTransactionInputForm())
                 true
+            }
+            R.id.menu_delete -> {
+                deleteTransaction()
+                return true
             }
             else -> super.onOptionsItemSelected(item)
         }
@@ -105,6 +113,15 @@ class EditTransactionActivity : AppCompatActivity() {
             InputFormField(calendar),
             value.getDoubleInput()
         )
+    }
+
+    private fun deleteTransaction() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_transaction_delete_title)
+            .setMessage(R.string.confirm_transaction_delete_msg)
+            .setPositiveButton(R.string.ok) { _, _ -> viewModel.deleteTransaction(editedTransactionId) }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun showDatePicker() {

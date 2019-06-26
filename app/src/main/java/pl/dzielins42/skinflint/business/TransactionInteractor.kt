@@ -24,6 +24,11 @@ class TransactionInteractor(
         }.subscribeOn(Schedulers.io())
     }
 
+    fun delete(id:Long):Completable{
+        return transactionRepository.delete(id)
+            .subscribeOn(Schedulers.io())
+    }
+
     fun save(input: TransactionInputForm): Single<Result<TransactionInputForm>> {
         return Single.just(input)
             .map { validateInput(it) }

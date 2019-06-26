@@ -37,6 +37,9 @@ interface TransactionDao : TransactionRepository {
 
     @Delete
     override fun delete(vararg transactions: Transaction): Completable
+
+    @Query("DELETE FROM transactions WHERE id = :id")
+    override fun delete(id: Long): Completable
 }
 
 class Converters {
