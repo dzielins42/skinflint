@@ -3,16 +3,17 @@ package pl.dzielins42.skinflint.view.transactions.details
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_edit_transaction.*
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.NavigationUI
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_transaction_details.*
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.business.InputFormField
 import pl.dzielins42.skinflint.business.TransactionInputForm
@@ -21,67 +22,92 @@ import pl.dzielins42.skinflint.util.ext.getInput
 import java.util.*
 import javax.inject.Inject
 
-class EditTransactionActivity : AppCompatActivity() {
+class TransactionDetailsFragment : Fragment() {
 
     @Inject
     lateinit var viewModel: EditTransactionViewModel
 
-    private var editedTransactionId: Long = 0
-
+    private val args: TransactionDetailsFragmentArgs by navArgs()
+    private var transactionId: Long = 0
     private val calendar: Calendar = Calendar.getInstance()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
-        setContentView(R.layout.activity_edit_transaction)
-        setSupportActionBar(toolbar)
+    // TODO Check if you can fix it better
+    // This is used because on configuration change, when subscribing to viewModel.viewState, Observer is triggered
+    // AFTER savedInstanceState is used to restore state of the View, so values are overridden by those from ViewModel.
+    // This is undesired because while ViewModel provides persisted data from Repository, View holds volatile draft
+    // that should not be discarded.
+    // Alternative solution: save volatile draft in ViewModel (but not in Repository).
+    private var skipFirstViewState = false
 
-        editedTransactionId = intent.getLongExtra(EXTRA_EDITED_TRANSACTION_ID, 0L)
+    //region Fragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_transaction_details, container, false)
+    }
 
-        date.setOnClickListener { showDatePicker() }
-        time.setOnClickListener { showTimePicker() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        NavigationUI.setupWithNavController(toolbar, findNavController())
+
+        transactionId = args.transactionId
+
+        setupUi()
 
         if (savedInstanceState == null) {
             // Call only first time it's created
-            viewModel.setEditedTransaction(editedTransactionId)
+            viewModel.setEditedTransaction(transactionId)
+        } else {
+            skipFirstViewState = true
         }
 
         viewModel.viewState.observe(
-            this,
+            viewLifecycleOwner,
             Observer<EditTransactionViewState> { viewState ->
                 applyViewState(viewState)
             }
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_transaction_edit, menu)
-
-        menu.findItem(R.id.menu_delete).isVisible = editedTransactionId > 0
-
-        return true
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
+    //endregion
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_done -> {
-                viewModel.saveTransaction(composeTransactionInputForm())
-                true
+    private fun setupUi() {
+        date.setOnClickListener { showDatePicker() }
+        time.setOnClickListener { showTimePicker() }
+
+        toolbar.inflateMenu(R.menu.menu_transaction_details)
+        toolbar.menu.findItem(R.id.menu_delete).isVisible = transactionId > 0
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_done -> {
+                    viewModel.saveTransaction(composeTransactionInputForm())
+                    true
+                }
+                R.id.menu_delete -> {
+                    deleteTransaction()
+                    true
+                }
+                else -> false
             }
-            R.id.menu_delete -> {
-                deleteTransaction()
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun applyViewState(viewState: EditTransactionViewState) {
-        if (viewState.finish) {
-            finish()
+        if (skipFirstViewState) {
+            skipFirstViewState = false
+            return
         }
 
-        editedTransactionId = viewState.form.id
+        if (viewState.finish) {
+            findNavController().popBackStack()
+        }
+
+        transactionId = viewState.form.id
 
         val inputForm = viewState.form
 
@@ -101,12 +127,12 @@ class EditTransactionActivity : AppCompatActivity() {
             else -> null
         }?.let { getString(it) }
 
-        title = if (editedTransactionId > 0) inputForm.name.value else getString(R.string.transaction_new)
+        toolbar.title = if (transactionId > 0) inputForm.name.value else getString(R.string.transaction_new)
     }
 
     private fun composeTransactionInputForm(): TransactionInputForm {
         return TransactionInputForm(
-            editedTransactionId,
+            transactionId,
             name.getInput(),
             InputFormField("$"),
             description.getInput(),
@@ -116,17 +142,17 @@ class EditTransactionActivity : AppCompatActivity() {
     }
 
     private fun deleteTransaction() {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(context!!)
             .setTitle(R.string.confirm_transaction_delete_title)
             .setMessage(R.string.confirm_transaction_delete_msg)
-            .setPositiveButton(R.string.ok) { _, _ -> viewModel.deleteTransaction(editedTransactionId) }
+            .setPositiveButton(R.string.ok) { _, _ -> viewModel.deleteTransaction(transactionId) }
             .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
     private fun showDatePicker() {
         DatePickerDialog(
-            this,
+            context!!,
             0,
             DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 setDateField(calendar.apply {
@@ -143,7 +169,7 @@ class EditTransactionActivity : AppCompatActivity() {
 
     private fun showTimePicker() {
         TimePickerDialog(
-            this,
+            context!!,
             0,
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 setTimeField(calendar.apply {
@@ -153,25 +179,15 @@ class EditTransactionActivity : AppCompatActivity() {
             },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            DateFormat.is24HourFormat(this)
+            DateFormat.is24HourFormat(context)
         ).show()
     }
 
     private fun setDateField(calendar: Calendar) {
-        date.setText(DateFormat.getDateFormat(this).format(calendar.time))
+        date.setText(DateFormat.getDateFormat(context).format(calendar.time))
     }
 
     private fun setTimeField(calendar: Calendar) {
-        time.setText(DateFormat.getTimeFormat(this).format(calendar.time))
-    }
-
-    companion object {
-        private const val EXTRA_EDITED_TRANSACTION_ID =
-            "pl.dzielins42.skinflint.view.transactions.details.EditTransactionActivity.EDITED_TRANSACTION_ID"
-
-        fun getIntent(context: Context, editedTransactionId: Long? = 0): Intent {
-            return Intent(context, EditTransactionActivity::class.java)
-                .putExtra(EXTRA_EDITED_TRANSACTION_ID, editedTransactionId)
-        }
+        time.setText(DateFormat.getTimeFormat(context).format(calendar.time))
     }
 }

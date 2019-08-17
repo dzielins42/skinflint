@@ -9,9 +9,9 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import pl.dzielins42.skinflint.business.TransactionInteractor
 import pl.dzielins42.skinflint.dagger.ViewModelKey
-import pl.dzielins42.skinflint.view.transactions.details.EditTransactionActivity
 import pl.dzielins42.skinflint.view.transactions.details.EditTransactionViewModel
-import pl.dzielins42.skinflint.view.transactions.list.TransactionsListActivity
+import pl.dzielins42.skinflint.view.transactions.details.TransactionDetailsFragment
+import pl.dzielins42.skinflint.view.transactions.list.TransactionsListFragment
 import pl.dzielins42.skinflint.view.transactions.list.TransactionsListViewModel
 
 @Module(
@@ -24,41 +24,41 @@ abstract class TransactionsModule {
 
     @Module(
         includes = [
-            TransactionsListActivityBind::class,
-            EditTransactionActivityBind::class
+            TransactionsListFragmentBind::class,
+            TransactionDetailsFragmentBind::class
         ]
     )
     class BindView
 
     @Module
-    abstract class TransactionsListActivityBind {
+    abstract class TransactionsListFragmentBind {
 
         @ContributesAndroidInjector(modules = [InjectViewModel::class])
-        abstract fun bind(): TransactionsListActivity
+        abstract fun bind(): TransactionsListFragment
 
         @Module
         class InjectViewModel {
             @Provides
             fun provideTransactionsListViewModel(
                 factory: ViewModelProvider.Factory,
-                target: TransactionsListActivity
+                target: TransactionsListFragment
             ) = ViewModelProviders.of(target, factory)
                 .get(TransactionsListViewModel::class.java)
         }
     }
 
     @Module
-    abstract class EditTransactionActivityBind {
+    abstract class TransactionDetailsFragmentBind {
 
         @ContributesAndroidInjector(modules = [InjectViewModel::class])
-        abstract fun bind(): EditTransactionActivity
+        abstract fun bind(): TransactionDetailsFragment
 
         @Module
         class InjectViewModel {
             @Provides
-            fun provideEditTransactionViewModel(
+            fun provideTransactionsListViewModel(
                 factory: ViewModelProvider.Factory,
-                target: EditTransactionActivity
+                target: TransactionDetailsFragment
             ) = ViewModelProviders.of(target, factory)
                 .get(EditTransactionViewModel::class.java)
         }
