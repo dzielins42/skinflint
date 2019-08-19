@@ -25,7 +25,7 @@ import javax.inject.Inject
 class TransactionDetailsFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel: EditTransactionViewModel
+    lateinit var viewModel: TransactionDetailsViewModel
 
     private val args: TransactionDetailsFragmentArgs by navArgs()
     private var transactionId: Long = 0
@@ -64,7 +64,7 @@ class TransactionDetailsFragment : Fragment() {
 
         viewModel.viewState.observe(
             viewLifecycleOwner,
-            Observer<EditTransactionViewState> { viewState ->
+            Observer<TransactionDetailsViewState> { viewState ->
                 applyViewState(viewState)
             }
         )
@@ -97,7 +97,7 @@ class TransactionDetailsFragment : Fragment() {
         }
     }
 
-    private fun applyViewState(viewState: EditTransactionViewState) {
+    private fun applyViewState(viewState: TransactionDetailsViewState) {
         if (skipFirstViewState) {
             skipFirstViewState = false
             return

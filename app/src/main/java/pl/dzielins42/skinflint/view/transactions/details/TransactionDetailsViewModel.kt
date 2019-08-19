@@ -8,14 +8,14 @@ import io.reactivex.disposables.CompositeDisposable
 import pl.dzielins42.skinflint.business.TransactionInputForm
 import pl.dzielins42.skinflint.business.TransactionInteractor
 
-class EditTransactionViewModel(
+class TransactionDetailsViewModel(
     private val transactionInteractor: TransactionInteractor
 ) : ViewModel() {
 
-    val viewState: LiveData<EditTransactionViewState>
+    val viewState: LiveData<TransactionDetailsViewState>
         get() = mutableViewState
 
-    private val mutableViewState: MutableLiveData<EditTransactionViewState> = MutableLiveData()
+    private val mutableViewState: MutableLiveData<TransactionDetailsViewState> = MutableLiveData()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
@@ -28,7 +28,7 @@ class EditTransactionViewModel(
                 .subscribe {
                     // TODO scan?
                     mutableViewState.postValue(
-                        EditTransactionViewState(
+                        TransactionDetailsViewState(
                             mutableViewState.value!!.form, true
                         )
                     )
@@ -42,7 +42,7 @@ class EditTransactionViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { result ->
                     mutableViewState.postValue(
-                        EditTransactionViewState(
+                        TransactionDetailsViewState(
                             result, false
                         )
                     )
@@ -56,7 +56,7 @@ class EditTransactionViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { result ->
                     mutableViewState.postValue(
-                        EditTransactionViewState(
+                        TransactionDetailsViewState(
                             result.data!!, result.isDone()
                         )
                     )

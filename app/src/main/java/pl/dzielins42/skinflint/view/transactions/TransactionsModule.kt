@@ -9,7 +9,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import pl.dzielins42.skinflint.business.TransactionInteractor
 import pl.dzielins42.skinflint.dagger.ViewModelKey
-import pl.dzielins42.skinflint.view.transactions.details.EditTransactionViewModel
+import pl.dzielins42.skinflint.view.transactions.details.TransactionDetailsViewModel
 import pl.dzielins42.skinflint.view.transactions.details.TransactionDetailsFragment
 import pl.dzielins42.skinflint.view.transactions.list.TransactionsListFragment
 import pl.dzielins42.skinflint.view.transactions.list.TransactionsListViewModel
@@ -60,7 +60,7 @@ abstract class TransactionsModule {
                 factory: ViewModelProvider.Factory,
                 target: TransactionDetailsFragment
             ) = ViewModelProviders.of(target, factory)
-                .get(EditTransactionViewModel::class.java)
+                .get(TransactionDetailsViewModel::class.java)
         }
     }
 
@@ -76,9 +76,9 @@ abstract class TransactionsModule {
 
         @Provides
         @IntoMap
-        @ViewModelKey(EditTransactionViewModel::class)
+        @ViewModelKey(TransactionDetailsViewModel::class)
         fun provideEditTransactionViewModel(
             transactionInteractor: TransactionInteractor
-        ): ViewModel = EditTransactionViewModel(transactionInteractor)
+        ): ViewModel = TransactionDetailsViewModel(transactionInteractor)
     }
 }
