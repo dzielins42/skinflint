@@ -62,9 +62,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/value"
                 android:layout_width="match_parent"
-                android:selectAllOnFocus="true"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,7 +104,8 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="false" />
+                android:editable="false"
+                android:focusableInTouchMode="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,7 +125,8 @@
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="false" />
+                android:editable="false"
+                android:focusableInTouchMode="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
