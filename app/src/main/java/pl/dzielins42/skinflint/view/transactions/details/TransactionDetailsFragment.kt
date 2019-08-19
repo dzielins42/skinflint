@@ -1,11 +1,12 @@
 package pl.dzielins42.skinflint.view.transactions.details
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import dagger.android.support.AndroidSupportInjection
+import eltos.simpledialogfragment.SimpleDateDialog
+import eltos.simpledialogfragment.SimpleDialog
+import eltos.simpledialogfragment.SimpleTimeDialog
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.business.InputFormField
@@ -22,7 +26,7 @@ import pl.dzielins42.skinflint.util.ext.getInput
 import java.util.*
 import javax.inject.Inject
 
-class TransactionDetailsFragment : Fragment() {
+class TransactionDetailsFragment : Fragment(), SimpleDialog.OnDialogResultListener {
 
     @Inject
     lateinit var viewModel: TransactionDetailsViewModel
@@ -73,6 +77,31 @@ class TransactionDetailsFragment : Fragment() {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
+    }
+    //endregion
+
+    //region SimpleDialog.OnDialogResultListener
+    override fun onResult(dialogTag: String, which: Int, extras: Bundle): Boolean {
+        if (which != SimpleDialog.OnDialogResultListener.BUTTON_POSITIVE) {
+            return false
+        }
+
+        when (dialogTag) {
+            TIME_PICKER_TAG -> {
+                setTimeField(calendar.apply {
+                    set(Calendar.HOUR_OF_DAY, extras.getInt(SimpleTimeDialog.HOUR))
+                    set(Calendar.MINUTE, extras.getInt(SimpleTimeDialog.MINUTE))
+                })
+                return true
+            }
+            DATE_PICKER_TAG -> {
+                setDateField(calendar.apply {
+                    timeInMillis = extras.getLong(SimpleDateDialog.DATE)
+                })
+                return true
+            }
+            else -> return false
+        }
     }
     //endregion
 
@@ -152,37 +181,24 @@ class TransactionDetailsFragment : Fragment() {
             .show()
     }
 
+    @SuppressLint("BuildNotImplemented")
     private fun showDatePicker() {
-        DatePickerDialog(
-            context!!,
-            0,
-            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                setDateField(calendar.apply {
-                    set(Calendar.YEAR, year)
-                    set(Calendar.MONTH, month)
-                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                })
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        SimpleDateDialog.build()
+            .date(calendar.time)
+            .neg(R.string.cancel)
+            .pos(R.string.ok)
+            .show(this, DATE_PICKER_TAG)
     }
 
+    @SuppressLint("BuildNotImplemented")
     private fun showTimePicker() {
-        TimePickerDialog(
-            context!!,
-            0,
-            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                setTimeField(calendar.apply {
-                    set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    set(Calendar.MINUTE, minute)
-                })
-            },
-            calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE),
-            DateFormat.is24HourFormat(context)
-        ).show()
+        SimpleTimeDialog.build()
+            .hour(calendar.get(Calendar.HOUR_OF_DAY))
+            .minute(calendar.get(Calendar.MINUTE))
+            .set24HourView(DateFormat.is24HourFormat(context))
+            .neg(R.string.cancel)
+            .pos(R.string.ok)
+            .show(this, TIME_PICKER_TAG)
     }
 
     private fun setDateField(calendar: Calendar) {
@@ -191,5 +207,10 @@ class TransactionDetailsFragment : Fragment() {
 
     private fun setTimeField(calendar: Calendar) {
         time.setText(DateFormat.getTimeFormat(context).format(calendar.time))
+    }
+
+    companion object {
+        private const val TIME_PICKER_TAG = "TIME_PICKER"
+        private const val DATE_PICKER_TAG = "DATE_PICKER"
     }
 }
