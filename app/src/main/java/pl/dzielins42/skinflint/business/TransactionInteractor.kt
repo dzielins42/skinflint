@@ -24,7 +24,7 @@ class TransactionInteractor(
         }.subscribeOn(Schedulers.io())
     }
 
-    fun delete(id:Long):Completable{
+    fun delete(id: Long): Completable {
         return transactionRepository.delete(id)
             .subscribeOn(Schedulers.io())
     }
@@ -113,7 +113,7 @@ class TransactionInteractor(
             InputFormField("PLN"),
             InputFormField(""),
             InputFormField(Calendar.getInstance()),
-            InputFormField(0.0)
+            InputFormField(Double.NaN)
         )
     }
 }

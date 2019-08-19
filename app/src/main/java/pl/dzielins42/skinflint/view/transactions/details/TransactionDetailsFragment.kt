@@ -112,7 +112,9 @@ class TransactionDetailsFragment : Fragment() {
         val inputForm = viewState.form
 
         name.setText(inputForm.name.value)
-        value.setText(inputForm.value.value.toString())
+        value.setText(inputForm.value.value.let {
+            if (it.isNaN()) null else it.toString()
+        })
         description.setText(inputForm.description.value)
         calendar.time = inputForm.date.value.time
         setDateField(calendar)
