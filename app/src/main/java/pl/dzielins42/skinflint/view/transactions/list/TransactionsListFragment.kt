@@ -10,23 +10,21 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import dagger.android.support.AndroidSupportInjection
+import eu.davidea.flexibleadapter.FlexibleAdapter
+import eu.davidea.flexibleadapter.items.IFlexible
 import kotlinx.android.synthetic.main.fragment_transactions_list.*
 import pl.dzielins42.skinflint.R
 import pl.dzielins42.skinflint.data.entity.Transaction
 import javax.inject.Inject
 
-class TransactionsListFragment : Fragment() {
+class TransactionsListFragment : Fragment(), FlexibleAdapter.OnItemClickListener {
 
     @Inject
     lateinit var viewModel: TransactionsListViewModel
 
-    private val adapter = TransactionsAdapter(object :
-        ItemClickListener {
-        override fun onItemClick(item: Transaction) {
-            goToTransactionDetails(item)
-        }
-    })
+    private val adapter = FlexibleAdapter<IFlexible<*>>(emptyList(), this, true)
 
+    //region Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { }
@@ -52,7 +50,7 @@ class TransactionsListFragment : Fragment() {
         viewModel.viewState.observe(
             viewLifecycleOwner,
             Observer<TransactionsListViewState> { viewState ->
-                adapter.submitList(viewState.transactions)
+                adapter.updateDataSet(viewState.transactions)
             }
         )
     }
@@ -61,6 +59,16 @@ class TransactionsListFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
+    //endregion
+
+    //region FlexibleAdapter.OnItemClickListener
+    override fun onItemClick(view: View, position: Int): Boolean {
+        when (val clickedItem = adapter.getItem(position)) {
+            is TransactionItem -> goToTransactionDetails(clickedItem.transaction)
+        }
+        return false
+    }
+    //endregion
 
     private fun goToTransactionDetails(transaction: Transaction? = null) {
         val action = TransactionsListFragmentDirections.actionTransactionDetails(transaction?.id ?: 0L)

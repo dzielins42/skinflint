@@ -91,4 +91,8 @@ dependencies {
 
     // SimpleDialogFragments
     implementation 'com.github.eltos:simpledialogfragments:v3.1-androidx'
+
+    // FlexibleAdapter
+    implementation 'eu.davidea:flexible-adapter:5.1.0'
+    implementation 'eu.davidea:flexible-adapter-ui:1.0.0'
 }
