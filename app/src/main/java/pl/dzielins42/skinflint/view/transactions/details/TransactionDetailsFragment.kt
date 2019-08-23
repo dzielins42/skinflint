@@ -2,6 +2,7 @@ package pl.dzielins42.skinflint.view.transactions.details
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import pl.dzielins42.skinflint.business.InputFormField
 import pl.dzielins42.skinflint.business.TransactionInputForm
 import pl.dzielins42.skinflint.util.ext.getDoubleInput
 import pl.dzielins42.skinflint.util.ext.getInput
+import java.lang.StringBuilder
 import java.util.*
 import javax.inject.Inject
 
@@ -121,6 +123,19 @@ class TransactionDetailsFragment : Fragment(), SimpleDialog.OnDialogResultListen
                     deleteTransaction()
                     true
                 }
+                R.id.menu_share -> {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, composeTransactionToShare())
+                        type = "text/plain"
+                    }
+                    context!!.startActivity(
+                        Intent.createChooser(
+                            sendIntent, resources.getString(R.string.transaction_share)
+                        )
+                    )
+                    true
+                }
                 else -> false
             }
         }
@@ -170,6 +185,15 @@ class TransactionDetailsFragment : Fragment(), SimpleDialog.OnDialogResultListen
             InputFormField(calendar),
             value.getDoubleInput()
         )
+    }
+
+    private fun composeTransactionToShare(): String {
+        val stringBuilder = StringBuilder()
+
+        // TODO Make it better
+        stringBuilder.append("Transaction ").append(name.text.toString())
+
+        return stringBuilder.toString()
     }
 
     private fun deleteTransaction() {

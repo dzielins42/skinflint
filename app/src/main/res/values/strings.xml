@@ -8,6 +8,7 @@
     <string name="transaction_currency">Currency</string>
     <string name="transaction_date">Date</string>
     <string name="transaction_time">Time</string>
+    <string name="transaction_share">Share transaction</string>
 
     <string name="confirm_transaction_delete_title">Delete transaction</string>
     <string name="confirm_transaction_delete_msg">Transaction will be removed</string>
@@ -16,6 +17,7 @@
     <string name="ok">@android:string/ok</string>
     <string name="delete">Delete</string>
     <string name="cancel">@android:string/cancel</string>
+    <string name="share">Share</string>
 
     <string name="form_error_empty">Field cannot be empty</string>
     <string name="form_error_invalid_value">Value is invalid</string>
